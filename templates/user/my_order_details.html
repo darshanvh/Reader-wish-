@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Order Details | Reader Wish</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',Arial,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background: var(--bg-color);
+  color: var(--text-dark);
+  padding-bottom:40px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header{
+  background: var(--surface);
+  color: var(--primary);
+  padding:16px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+header h1{
+  font-size:26px;
+  font-weight:700;
+  color: var(--primary);
+  margin: 0;
+}
+
+nav{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+nav a,
+nav span{
+  color: var(--text-dark);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color: var(--accent);
+}
+
+.btn{
+  background: var(--primary);
+  padding:8px 20px;
+  border-radius:20px;
+  color:#fff !important;
+  font-weight:600;
+  text-decoration:none;
+  border: none;
+  cursor: pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background: var(--primary-hover);
+  transform:translateY(-2px);
+}
+
+[data-theme="dark"] .btn {
+  background: #f8fafc;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .btn:hover {
+  background: #e2e8f0;
+}
+
+.theme-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: #f8fafc;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: #e2e8f0;
+}
+
+main{
+  width:90%;
+  max-width:900px;
+  margin:35px auto;
+  background: var(--surface);
+  padding:45px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+main h2{
+  text-align:center;
+  margin-bottom:35px;
+  color: var(--primary);
+  font-size:28px;
+  position:relative;
+  font-weight: 600;
+}
+
+main h2::after{
+  content:'';
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:70px;
+  height:4px;
+  background: var(--accent);
+  border-radius:2px;
+}
+
+.order-details-container{
+  background: var(--bg-color);
+  padding:30px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.order-header{
+  display:flex;
+  align-items:center;
+  gap:25px;
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom: 2px solid var(--border);
+}
+
+.order-header img{
+  width:140px;
+  height:180px;
+  object-fit:cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.order-header-info h3{
+  font-size:22px;
+  color: var(--primary);
+  margin-bottom:10px;
+}
+
+.order-header-info .price{
+  font-size:24px;
+  color: var(--accent);
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.order-header-info .status{
+  display:inline-block;
+  background: var(--accent);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:14px;
+  font-weight:600;
+}
+
+[data-theme="dark"] .order-header-info .status {
+  background: #fbbf24;
+  color: #0f172a;
+}
+
+.detail-section{
+  margin-top:25px;
+}
+
+.detail-section h4{
+  font-size:18px;
+  color: var(--primary);
+  margin-bottom:15px;
+  font-weight:600;
+}
+
+.detail-row{
+  display:flex;
+  padding:12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-row:last-child{
+  border-bottom:none;
+}
+
+.detail-label{
+  flex: 0 0 150px;
+  font-weight:600;
+  color: var(--text-light);
+  font-size:15px;
+}
+
+.detail-value{
+  flex:1;
+  color: var(--text-dark);
+  font-size:15px;
+}
+
+.back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:30px;
+  color: var(--text-dark);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  transition:0.3s;
+}
+
+.back-link:hover{
+  color: var(--accent);
+}
+
+@media(max-width:768px){
+  header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  main {
+    padding: 25px;
+    width: 95%;
+  }
+  
+  .order-header{
+    flex-direction:column;
+    text-align:center;
+  }
+  
+  .detail-row{
+    flex-direction:column;
+    gap:4px;
+  }
+  
+  .detail-label{
+    flex:none;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 20px;
+  }
+  
+  nav a, nav span {
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  main h2 {
+    font-size: 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/my-orders">My Orders</a>
+    <a href="/my-acc">Profile</a>
+    {% if session.user %}
+    <span>Hello, {{ session.user }}</span>
+    <a href="/logout" class="btn">Logout</a>
+    {% else %}
+    <a href="/login" class="btn">Login</a>
+    {% endif %}
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<main>
+  <h2>📋 Order Details</h2>
+
+  <div class="order-details-container">
+    
+    <div class="order-header">
+      {% if order.book_image %}
+        <img src="{{ url_for('static', filename='uploads/books/' ~ order.book_image) }}" alt="{{ order.book_name }}">
+      {% else %}
+        <img src="{{ url_for('static', filename='uploads/books/default.jpg') }}" alt="{{ order.book_name }}">
+      {% endif %}
+      
+      <div class="order-header-info">
+        <h3>{{ order.book_name }}</h3>
+        <p class="price">₹{{ order.price }}</p>
+        <span class="status">{{ order.status }}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>📦 Order Information</h4>
+      
+      <div class="detail-row">
+        <div class="detail-label">Order ID</div>
+        <div class="detail-value">{{ order._id }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Order Date</div>
+        <div class="detail-value">{{ order.order_date.strftime('%d-%m-%Y %H:%M') }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Delivery Status</div>
+        <div class="detail-value">
+          <span class="status">{{ order.status }}</span>
+        </div>
+      </div>
+      
+      {% if order.delivery_date %}
+      <div class="detail-row">
+        <div class="detail-label">Delivery Date</div>
+        <div class="detail-value">{{ order.delivery_date.strftime('%d-%m-%Y %H:%M') }}</div>
+      </div>
+      {% elif order.status == "Delivered" %}
+      <div class="detail-row">
+        <div class="detail-label">Delivery Date</div>
+        <div class="detail-value">Not recorded</div>
+      </div>
+      {% endif %}
+      
+      <div class="detail-row">
+        <div class="detail-label">Quantity</div>
+        <div class="detail-value">{{ order.quantity }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Total Price</div>
+        <div class="detail-value" style="font-size: 20px; font-weight: 700; color: var(--accent);">₹{{ order.total_price }}</div>
+      </div>
+    </div>
+
+    {% if order.user_info %}
+    <div class="detail-section">
+      <h4>📍 Delivery Information</h4>
+      
+      <div class="detail-row">
+        <div class="detail-label">Name</div>
+        <div class="detail-value">{{ order.user_info.name }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Phone</div>
+        <div class="detail-value">{{ order.user_info.phone }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Email</div>
+        <div class="detail-value">{{ order.user_info.email }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Address</div>
+        <div class="detail-value">{{ order.user_info.address }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">Pin Code</div>
+        <div class="detail-value">{{ order.user_info.pin_code or "N/A" }}</div>
+      </div>
+      
+      <div class="detail-row">
+        <div class="detail-label">State</div>
+        <div class="detail-value">{{ order.user_info.state or "N/A" }}</div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <a href="/my-orders" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to My Orders
+  </a>
+</main>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+
+</body>
+</html>

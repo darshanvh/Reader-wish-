@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Orders | Reader Wish</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<style>
+/* ================= MY ORDERS PAGE STYLES ================= */
+/* Using theme variables from theme.css */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',Arial,sans-serif;
+}
+
+/* ================= BACKGROUND ================= */
+body{
+  min-height:100vh;
+  background: var(--bg-color);
+  color: var(--text-dark);
+  padding-bottom:40px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ================= HEADER ================= */
+header{
+  background: var(--surface);
+  color: var(--primary);
+  padding:16px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+header h1{
+  font-size:26px;
+  font-weight:700;
+  color: var(--primary);
+  margin: 0;
+}
+
+nav{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+nav a,
+nav span{
+  color: var(--text-dark);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color: var(--accent);
+}
+
+.btn{
+  background: var(--primary);
+  padding:8px 20px;
+  border-radius:20px;
+  color:#fff !important;
+  font-weight:600;
+  text-decoration:none;
+  border: none;
+  cursor: pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background: var(--primary-hover);
+  transform:translateY(-2px);
+}
+
+[data-theme="dark"] .btn {
+  background: #f8fafc;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .btn:hover {
+  background: #e2e8f0;
+}
+
+.theme-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: #f8fafc;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: #e2e8f0;
+}
+
+/* ================= MAIN ================= */
+main{
+  width:90%;
+  max-width:1200px;
+  margin:35px auto;
+  background: var(--surface);
+  padding:45px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+main h2{
+  text-align:center;
+  margin-bottom:35px;
+  color: var(--primary);
+  font-size:28px;
+  position:relative;
+  font-weight: 600;
+}
+
+main h2::after{
+  content:'';
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:70px;
+  height:4px;
+  background: var(--accent);
+  border-radius:2px;
+}
+
+/* ================= ORDER GRID ================= */
+.book-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:28px;
+}
+
+/* ================= ORDER CARD ================= */
+.book-card{
+  background: var(--bg-color);
+  padding:20px;
+  border-radius: var(--radius-md);
+  text-align:center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition:.35s;
+}
+
+.book-card:hover{
+  transform:translateY(-10px);
+  box-shadow: var(--shadow-hover);
+}
+
+.book-card img{
+  width:160px;
+  height:200px;
+  object-fit:cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.book-card h3{
+  margin:15px 0 8px;
+  font-size:17px;
+  color: var(--primary);
+  font-weight:600;
+}
+
+.price{
+  color: var(--accent);
+  font-weight:bold;
+  font-size:18px;
+}
+
+.status{
+  margin-top:8px;
+  color:#fff;
+  font-size:13px;
+  font-weight:600;
+  background: var(--accent);
+  padding:6px 12px;
+  border-radius:20px;
+  display:inline-block;
+}
+
+[data-theme="dark"] .status {
+  background: #fbbf24;
+  color: #0f172a;
+}
+
+.date{
+  font-size:13px;
+  color: var(--text-light);
+  margin-top:8px;
+}
+
+/* ================= EMPTY ================= */
+.empty{
+  text-align:center;
+  font-size:20px;
+  color: var(--text-light);
+  grid-column:1/-1;
+  padding:40px;
+}
+
+/* ================= LINK RESET ================= */
+a.order-link{
+  text-decoration:none;
+  color:inherit;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:768px){
+  header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  main {
+    padding: 25px;
+    width: 95%;
+  }
+  
+  .book-card img{
+    width:130px;
+    height:180px;
+  }
+  
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 20px;
+  }
+  
+  nav a, nav span {
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  main h2 {
+    font-size: 22px;
+  }
+  
+  .book-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    
+    <a href="/my-acc">Profile</a>
+    {% if session.user %}
+    <span>Hello, {{ user_name }}</span>
+    <a href="/logout" class="btn">Logout</a>
+    {% else %}
+    <a href="/login" class="btn">Login</a>
+    {% endif %}
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main>
+  <h2>📦 My Orders</h2>
+
+  <div class="book-grid">
+
+    {% if orders|length == 0 %}
+      <p class="empty">No orders found! 😔</p>
+    {% endif %}
+
+    {% for order in orders %}
+    <a href="/my-order/{{ order._id }}" class="order-link">
+      <div class="book-card">
+
+        {% if order.book_image %}
+          <img src="{{ url_for('static', filename='uploads/books/' ~ order.book_image) }}">
+        {% else %}
+          <img src="{{ url_for('static', filename='uploads/books/default.jpg') }}">
+        {% endif %}
+
+        <h3>{{ order.book_name }}</h3>
+        <p class="price">₹{{ order.price }}</p>
+        <p class="status">{{ order.status }}</p>
+        <p class="date">{{ order.order_date.strftime('%d-%m-%Y') }}</p>
+
+      </div>
+    </a>
+    {% endfor %}
+
+  </div>
+</main>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+
+</body>
+</html>

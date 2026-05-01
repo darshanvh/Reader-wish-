@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Signup | Reader Wish</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<style>
+/* =======================
+   GLOBAL STYLES
+   ======================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+    color: var(--text-dark);
+    padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+
+/* Background Pattern */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(45deg, var(--border) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--border) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--border) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--border) 75%);
+    background-size: 60px 60px;
+    background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+/* =======================
+   THEME TOGGLE
+   ======================= */
+.theme-toggle-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.theme-toggle {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.3s;
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+[data-theme="dark"] .theme-toggle {
+    background: #f8fafc;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background: #e2e8f0;
+}
+
+/* =======================
+   AUTH CONTAINER
+   ======================= */
+.auth-container {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: var(--shadow-hover);
+    border: 1px solid var(--border);
+    transition: background 0.3s ease, border-color 0.3s ease;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h1 {
+    font-size: 32px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.auth-header p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+/* =======================
+   TOGGLE BUTTONS
+   ======================= */
+.toggle-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: var(--bg-color);
+    padding: 5px;
+    border-radius: 25px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-dark);
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.toggle-btn.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+[data-theme="dark"] .toggle-btn.active {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.toggle-btn:hover:not(.active) {
+    background: var(--border);
+}
+
+/* =======================
+   FORMS
+   ======================= */
+.form-container {
+    position: relative;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-color);
+    color: var(--text-dark);
+    font-size: 15px;
+    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+[data-theme="dark"] .form-group input:focus {
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+}
+
+/* =======================
+   SUBMIT BUTTON
+   ======================= */
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* =======================
+   FOOTER TEXT
+   ======================= */
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.auth-footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* =======================
+   MOBILE RESPONSIVE
+   ======================= */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+    
+    .auth-header h1 {
+        font-size: 26px;
+    }
+    
+    .theme-toggle-wrapper {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .theme-toggle {
+        padding: 10px 16px;
+        font-size: 18px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<div class="theme-toggle-wrapper">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+</div>
+
+<div class="auth-container">
+    <div class="auth-header">
+        <h1>📚 Reader Wish</h1>
+        <p>Your literary journey starts here</p>
+    </div>
+
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+        <button class="toggle-btn active" onclick="showForm('login')">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        <button class="toggle-btn" onclick="showForm('signup')">
+            <i class="fas fa-user-plus"></i> Sign Up
+        </button>
+    </div>
+
+    <div class="form-container">
+        <!-- Login Form -->
+        <form method="POST" action="/login" class="auth-form active" id="loginForm">
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="text" name="phone" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+
+        <!-- Signup Form -->
+        <form method="POST" action="/signup" class="auth-form" id="signupForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" name="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="text" name="phone" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" placeholder="Create a password" required>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </button>
+        </form>
+    </div>
+
+    <div class="auth-footer">
+        <p>By continuing, you agree to our Terms & Privacy Policy</p>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+<script>
+function showForm(formType) {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    
+    if (formType === 'login') {
+        loginForm.classList.add('active');
+        signupForm.classList.remove('active');
+        toggleBtns[0].classList.add('active');
+        toggleBtns[1].classList.remove('active');
+    } else {
+        signupForm.classList.add('active');
+        loginForm.classList.remove('active');
+        toggleBtns[1].classList.add('active');
+        toggleBtns[0].classList.remove('active');
+    }
+}
+
+// Check URL to show appropriate form
+document.addEventListener('DOMContentLoaded', function() {
+    const path = window.location.pathname;
+    if (path.includes('signup')) {
+        showForm('signup');
+    }
+});
+</script>
+
+</body>
+</html>

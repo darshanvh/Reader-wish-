@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Reader Wish{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+  /* (Trimmed) Core theme CSS taken from dashboard styles to provide a consistent look */
+  :root { --bg-color:#f8fafc; --surface:#ffffff; --primary:#0f172a; --primary-hover:#1e293b; --accent:#f59e0b; --accent-hover:#d97706; --text-dark:#334155; --text-light:#94a3b8; --border:#e2e8f0; --radius-lg:16px; --radius-md:10px; --shadow-sm:0 4px 6px -1px rgba(0,0,0,0.05); --shadow-hover:0 10px 25px -5px rgba(0,0,0,0.1);} 
+  [data-theme="dark"]{--bg-color:#0f172a;--surface:#1e293b;--primary:#f8fafc;--primary-hover:#e2e8f0;--accent:#fbbf24;--accent-hover:#f59e0b;--text-dark:#e2e8f0;--text-light:#94a3b8;--border:#334155;--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.3);--shadow-hover:0 10px 25px -5px rgba(0,0,0,0.5);} 
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;} body{background:var(--bg-color);color:var(--text-dark);min-height:100vh;transition:background-color .3s ease,color .3s ease;} 
+  header{background:var(--surface);color:var(--primary);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:1000;border-bottom:1px solid var(--border);transition:background .3s ease,border-color .3s ease;} 
+  header h1{font-size:26px;font-weight:700;color:var(--primary);} nav{display:flex;gap:20px;align-items:center;} nav a,nav span{color:var(--text-dark);text-decoration:none;font-size:15px;font-weight:500;transition:.3s;} .btn{background:var(--primary);padding:8px 20px;border-radius:20px;color:#fff !important;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:.3s;} .btn:hover{background:var(--primary-hover);transform:translateY(-2px);} [data-theme="dark"] .btn{background:#f8fafc;color:#0f172a !important;} [data-theme="dark"] .btn:hover{background:#e2e8f0;} 
+  main{width:95%;max-width:1400px;margin:40px auto;background:var(--surface);padding:35px;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:background .3s ease,border-color .3s ease;} h2{font-size:24px;color:var(--primary);margin-bottom:25px;font-weight:600;position:relative;display:inline-block;} h2::after{content:'';position:absolute;bottom:-6px;left:0;width:40px;height:3px;background:var(--accent);border-radius:2px;} 
+  .card{background:var(--surface);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:.3s;display:flex;flex-direction:column;} 
+  .card img{width:100%;height:260px;object-fit:cover;border-bottom:1px solid var(--border);cursor:zoom-in;transition:transform .3s;} .card:hover img{transform:scale(1.05);} .card-content{padding:16px;display:flex;flex-direction:column;flex-grow:1;} 
+  .card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;} .small-btn{padding:8px;border-radius:6px;font-size:12px;font-weight:600;text-align:center;text-decoration:none;border:none;cursor:pointer;transition:.2s;display:block;} .alt{background:var(--primary);color:#fff;} .primary{background:var(--accent);color:#fff;} .preview{background:#f1f5f9;color:var(--text-dark);} 
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(5px);} .modal-box{background:var(--surface);padding:24px;border-radius:var(--radius-lg);position:relative;box-shadow:0 25px 50px rgba(0,0,0,.5);} .close{position:absolute;top:10px;right:16px;font-size:26px;color:var(--text-dark);cursor:pointer;transition:transform .3s ease;} .close:hover{transform:rotate(90deg);color:var(--accent);} 
+  footer{background:var(--surface);border-top:1px solid var(--border);margin-top:60px;padding:50px 40px 20px;transition:background .3s ease,border-color .3s ease;} .footer-content{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-bottom:40px;} .footer-section h3{font-size:22px;color:var(--primary);margin-bottom:20px;font-weight:600;} .feedback-form-footer{background:var(--bg-color);padding:25px;border-radius:var(--radius-md);border:1px solid var(--border);} .submit-feedback-btn{background:var(--accent);color:#fff;padding:10px 24px;border-radius:8px;border:none;font-weight:600;cursor:pointer;transition:.3s;width:100%;font-size:14px;} .submit-feedback-btn:hover{background:var(--accent-hover);transform:translateY(-2px);} .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid var(--border);color:var(--text-light);font-size:14px;} 
+  @media (max-width:768px){.footer-content{grid-template-columns:1fr;gap:40px}} 
+  </style>
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+
+  <header>
+    <h1>📚 Reader Wish</h1>
+    <nav>
+      <a href="/cart">Cart</a>
+      <a href="/wishlist">Wishlist</a>
+      <a href="/my-orders">Orders</a>
+      <a href="/my-acc">Profile</a>
+      {% if session.user %}
+        <span>Hello, {{ user_name }}</span>
+        <a href="/logout" class="btn">Logout</a>
+      {% else %}
+        <a href="/login" class="btn">Login</a>
+      {% endif %}
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </nav>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>📞 Contact Us</h3>
+        <div class="contact-info">
+          <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>123 Book Street, Reading City, RC 12345</span></div>
+          <div class="contact-item"><i class="fas fa-phone"></i><span>+91 98765 43210</span></div>
+          <div class="contact-item"><i class="fas fa-envelope"></i><span>support@readerwish.com</span></div>
+          <div class="contact-item"><i class="fas fa-clock"></i><span>Mon - Sat: 9:00 AM - 8:00 PM</span></div>
+        </div>
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com" target="_blank" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://youtube.com" target="_blank" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>💬 Send Us Feedback</h3>
+        <div class="feedback-form-footer">
+          <form id="generalFeedbackForm">
+            <div class="form-group-footer"><label>Your Name</label><input type="text" name="name" id="feedbackName" placeholder="Enter your name" required></div>
+            <div class="form-group-footer"><label>Your Email</label><input type="email" name="email" id="feedbackEmail" placeholder="Enter your email" required></div>
+            <div class="form-group-footer"><label>Your Message</label><textarea name="message" id="feedbackMessage" placeholder="Share your thoughts..." required></textarea></div>
+            <button type="submit" class="submit-feedback-btn">Send Feedback</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Reader Wish | Made with ❤️ | All Rights Reserved</div>
+  </footer>
+
+  <div class="modal" id="imgModal" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modalImg">
+    </div>
+  </div>
+
+  <script>
+  // Hero slider (child pages can override)
+  let slides = document.querySelectorAll(".hero-img"), i = 0;
+  if (slides.length > 0) setInterval(()=>{ slides[i].classList.remove("active"); i=(i+1)%slides.length; slides[i].classList.add("active"); },3000);
+
+  function openModal(img){ document.getElementById("modalImg").src="/static/uploads/books/"+img; document.getElementById("imgModal").style.display="flex"; }
+  function closeModal(){ document.getElementById("imgModal").style.display="none"; }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = html.getAttribute('data-theme');
+    if (currentTheme === 'dark') { html.removeAttribute('data-theme'); themeToggle.textContent = '🌙'; localStorage.setItem('theme','light'); }
+    else { html.setAttribute('data-theme','dark'); themeToggle.textContent = '☀️'; localStorage.setItem('theme','dark'); }
+  }
+  document.addEventListener('DOMContentLoaded', function(){ const savedTheme = localStorage.getItem('theme'); const themeToggle = document.getElementById('themeToggle'); if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme','dark'); themeToggle.textContent = '☀️'; } else { themeToggle.textContent = '🌙'; } });
+
+  // General feedback form submission handling
+  document.addEventListener('submit', function(e){ if (e.target && e.target.id === 'generalFeedbackForm'){
+    e.preventDefault(); const name=document.getElementById('feedbackName').value; const email=document.getElementById('feedbackEmail').value; const message=document.getElementById('feedbackMessage').value; const formData=new FormData(); formData.append('name',name); formData.append('email',email); formData.append('message',message);
+    fetch('/submit-general-feedback',{method:'POST',body:formData}).then(res=>res.json()).then(data=>{ if(data.success){ alert(data.message); e.target.reset(); } else { alert('Error: '+data.message); } }).catch(err=>{ console.error(err); alert('An error occurred while submitting feedback'); });
+  }});
+
+  {% block scripts %}{% endblock %}
+  </script>
+
+</body>
+</html>

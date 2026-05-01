@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Non-Fiction Books | Reader Wish</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<style>
+/* ================= NON-FICTION ALL PAGE STYLES ================= */
+/* Using theme variables from theme.css */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',Arial,sans-serif;
+}
+
+body{
+  margin:0;
+  font-family:'Poppins', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-dark);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ================= HEADER ================= */
+header{
+  background: var(--surface);
+  color: var(--primary);
+  padding:16px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+header h1{
+  font-size:26px;
+  font-weight:700;
+  color: var(--primary);
+  margin: 0;
+}
+
+nav{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+nav a,
+nav span{
+  color: var(--text-dark);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color: var(--accent);
+}
+
+.btn{
+  background: var(--primary);
+  padding:8px 20px;
+  border-radius:20px;
+  color:#fff !important;
+  font-weight:600;
+  text-decoration:none;
+  border: none;
+  cursor: pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background: var(--primary-hover);
+  transform:translateY(-2px);
+}
+
+[data-theme="dark"] .btn {
+  background: #f8fafc;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .btn:hover {
+  background: #e2e8f0;
+}
+
+.theme-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: #f8fafc;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: #e2e8f0;
+}
+
+/* ===== SECTION ===== */
+.nonfiction-all-section{
+  width:95%;
+  max-width: 1400px;
+  margin: 40px auto;
+  padding:40px;
+  background: var(--surface);
+  min-height:100vh;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.nonfiction-all-section h2{
+  font-size:28px;
+  margin-bottom:30px;
+  font-weight:700;
+  color: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+.nonfiction-all-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* ===== GRID ===== */
+.grid-7{
+  display:grid;
+  grid-template-columns:repeat(6, 1fr);
+  gap:24px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  overflow:hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition:.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  cursor:pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-content{
+  padding:14px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.meta{
+  font-size:12px;
+  color: var(--text-light);
+  margin-bottom:5px;
+}
+
+.category{
+  font-size:12px;
+  font-weight:600;
+  color: var(--accent);
+  margin-bottom:5px;
+}
+
+.price{
+  font-size:16px;
+  font-weight:600;
+  color: var(--accent);
+  margin-bottom:10px;
+}
+
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.small-btn{
+  display:block;
+  font-size:11px;
+  padding:7px 9px;
+  border-radius:6px;
+  text-decoration:none;
+  text-align: center;
+  transition:.3s;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary{
+  background: var(--accent);
+  color:white;
+}
+
+.primary:hover{
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.alt{
+  background: var(--primary);
+  color:#fff;
+}
+
+.alt:hover{
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .alt {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .alt:hover {
+  background: #e2e8f0;
+}
+
+.preview{
+  background: #f1f5f9;
+  color: var(--text-dark);
+}
+
+.preview:hover{
+  background: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .preview {
+  background: #334155;
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .preview:hover {
+  background: #475569;
+}
+
+.wishlist-white{
+  background:#fff;
+  border:1px solid #fca5a5;
+  color:#ef4444;
+}
+
+[data-theme="dark"] .wishlist-white {
+  background: #1e293b;
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.wishlist-white:hover{
+  background:#fef2f2;
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .wishlist-white:hover {
+  background: #334155;
+}
+
+.wishlist-red{
+  background:#ef4444;
+  color:#fff;
+  pointer-events: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1400px){
+  .grid-7{ grid-template-columns:repeat(5, 1fr); }
+}
+
+@media(max-width:1100px){
+  .grid-7{ grid-template-columns:repeat(4, 1fr); }
+}
+
+@media(max-width:800px){
+  header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nonfiction-all-section {
+    padding: 25px;
+    width: 95%;
+  }
+  
+  .grid-7{ grid-template-columns:repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 20px;
+  }
+  
+  nav a, nav span {
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  .nonfiction-all-section h2 {
+    font-size: 22px;
+  }
+  
+  .grid-7 {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/my-orders">Orders</a>
+    <a href="/my-acc">Profile</a>
+    {% if session.user %}
+    <span>Hello, {{ user_name }}</span>
+    <a href="/logout" class="btn">Logout</a>
+    {% else %}
+    <a href="/login" class="btn">Login</a>
+    {% endif %}
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<section class="nonfiction-all-section">
+
+  <h2>📘 Non-Fiction (Real & True Information)</h2>
+
+  <div class="grid-7">
+
+    {% for p in non_fiction_books %}
+    <div class="card">
+      
+      <img src="/static/uploads/books/{{ p.image }}" onclick="openModal('{{ p.image }}')">
+
+      <div class="card-content">
+
+        <!-- Category -->
+        <div class="category">
+          {{ p.sub_category or 'General Non-Fiction' }}
+        </div>
+
+        <div class="meta">Author: {{ p.author or 'Unknown' }}</div>
+        <div class="price">₹{{ p.price }}</div>
+
+        <div class="card-actions">
+
+          <a href="javascript:void(0)" 
+             onclick="openModal('{{ p.image }}')" 
+             class="small-btn preview">👁 Preview</a>
+
+          {% if (p._id|string) in wishlist_ids %}
+            <span class="small-btn wishlist-red">❤️ Wishlisted</span>
+          {% else %}
+            <a href="/add-to-wishlist/{{ p._id }}" 
+               class="small-btn wishlist-white">❤️ Wishlist</a>
+          {% endif %}
+
+          {% if (p._id|string) in cart_book_ids %}
+            <a href="/cart" 
+               class="small-btn alt" 
+               style="background:#6c757d;">✔ In Cart</a>
+          {% else %}
+            <a href="/cart/add/{{ p._id }}" 
+               class="small-btn alt">🛒 Cart</a>
+          {% endif %}
+
+          <a href="/buy/{{ p._id }}" 
+             class="small-btn primary">💳 Buy</a>
+
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+
+  </div>
+
+</section>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+
+</body>
+</html>

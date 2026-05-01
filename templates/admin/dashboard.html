@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Reader Wish</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<style>
+/* --- 1. Color Palette & Variables --- */
+:root {
+    --bg-main: #0F172A;      /* Deep Slate for main background */
+    --bg-surface: #1E293B;   /* Lighter Slate for cards/sidebar */
+    --text-primary: #F8FAFC; /* Crisp White */
+    --text-secondary: #94A3B8; /* Soft Gray for readability */
+    --accent: #3B82F6;       /* Electric Blue */
+    --accent-hover: #2563EB;
+    --danger: #EF4444;       /* Red for logout/delete */
+    --border: rgba(255, 255, 255, 0.08); /* Subtle glass border */
+}
+
+/* --- 2. Base Reset --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Inter', sans-serif; 
+}
+
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-primary); 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* --- 3. Sidebar Layout --- */
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.sidebar-header .material-symbols-outlined { 
+    color: var(--accent); 
+    font-size: 28px; 
+}
+
+.nav-links { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    flex-grow: 1; 
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--accent);
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: var(--danger);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin-top: auto;
+    font-weight: 500;
+}
+
+.logout-btn:hover { 
+    background-color: rgba(239, 68, 68, 0.1); 
+}
+
+/* --- 4. Main Content Area --- */
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.top-header { 
+    margin-bottom: 40px; 
+}
+
+.top-header h1 { 
+    font-size: 1.8rem; 
+    font-weight: 600; 
+    margin-bottom: 8px; 
+}
+
+.top-header p { 
+    color: var(--text-secondary); 
+}
+
+/* --- 5. Top Stats Grid --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-title { 
+    color: var(--text-secondary); 
+    font-size: 0.9rem; 
+    font-weight: 500; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
+
+.stat-value { 
+    font-size: 2rem; 
+    font-weight: 700; 
+    color: var(--text-primary); 
+}
+
+.stat-trend { 
+    color: #10B981; 
+    font-size: 0.85rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+    font-weight: 500;
+}
+
+/* --- 6. Quick Actions Grid --- */
+.section-title { 
+    margin-bottom: 20px; 
+    font-size: 1.2rem; 
+    font-weight: 600; 
+    color: var(--text-primary); 
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.action-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    background-color: rgba(30, 41, 59, 0.8);
+}
+
+.action-icon {
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    color: var(--accent);
+    display: flex;
+}
+
+.action-text h3 { 
+    font-size: 1.1rem; 
+    color: var(--text-primary); 
+    margin-bottom: 4px; 
+    font-weight: 600;
+}
+
+.action-text p { 
+    font-size: 0.9rem; 
+    color: var(--text-secondary); 
+    line-height: 1.4;
+}
+
+/* --- 7. Responsive Design --- */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+    }
+    
+    .sidebar-header {
+        margin-bottom: 20px;
+    }
+    
+    .nav-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <span class="material-symbols-outlined">shield_person</span>
+        Admin Portal
+    </div>
+    
+    <div class="nav-links">
+        <a href="/admin/dashboard" class="nav-link active">
+            <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="/admin/books" class="nav-link">
+            <span class="material-symbols-outlined">library_books</span> Books
+        </a>
+        <a href="/admin/orders" class="nav-link">
+            <span class="material-symbols-outlined">shopping_cart</span> Orders
+        </a>
+        <a href="/admin/users" class="nav-link">
+            <span class="material-symbols-outlined">group</span> Users
+        </a>
+    </div>
+    
+    <a href="/logout" class="logout-btn">
+        <span class="material-symbols-outlined">logout</span> Logout
+    </a>
+</nav>
+
+<main class="main-content">
+    <div class="top-header">
+        <h1>Welcome back, Darshan</h1>
+        <p>Here is what's happening in your library today.</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-title">Total Books</span>
+            <span class="stat-value">{{ total_books or 0 }}</span>
+            <span class="stat-trend">
+                <span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span> 
+                Active inventory
+            </span>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-title">Active Users</span>
+            <span class="stat-value">{{ total_users or 0 }}</span>
+            <span class="stat-trend">
+                <span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span> 
+                Registered members
+            </span>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-title">Total Orders</span>
+            <span class="stat-value">{{ total_orders or 0 }}</span>
+            <span class="stat-trend" style="color: var(--text-secondary);">
+                <span class="material-symbols-outlined" style="font-size: 16px;">shopping_bag</span> 
+                All time
+            </span>
+        </div>
+    </div>
+    
+    <h2 class="section-title">Inventory Management</h2>
+    <div class="actions-grid">
+        <a href="/admin/books" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">inventory_2</span>
+            </div>
+            <div class="action-text">
+                <h3>Manage Books</h3>
+                <p>View, edit, or remove current books in the database.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/book-management" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">settings</span>
+            </div>
+            <div class="action-text">
+                <h3>Book Management</h3>
+                <p>Advanced book operations and bulk actions.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/books/status" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">bar_chart</span>
+            </div>
+            <div class="action-text">
+                <h3>Book Stock Status</h3>
+                <p>Monitor inventory levels and availability.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/orders" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">history</span>
+            </div>
+            <div class="action-text">
+                <h3>Purchase History</h3>
+                <p>Review logs of all sold and issued books.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/users" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">manage_accounts</span>
+            </div>
+            <div class="action-text">
+                <h3>Manage Users</h3>
+                <p>View user profiles, permissions, and activity.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/available_bookss" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <div class="action-text">
+                <h3>Available Books</h3>
+                <p>View all books currently in stock.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/sold_out_books" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">trending_up</span>
+            </div>
+            <div class="action-text">
+                <h3>Sold Out Books</h3>
+                <p>Track books that need restocking.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/deleted_books" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">delete</span>
+            </div>
+            <div class="action-text">
+                <h3>Deleted Books</h3>
+                <p>View and restore removed books.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/selling_books" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">sell</span>
+            </div>
+            <div class="action-text">
+                <h3>Selling Books</h3>
+                <p>Track sales with date filters.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/general-feedback" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">feedback</span>
+            </div>
+            <div class="action-text">
+                <h3>Customer Feedback</h3>
+                <p>Review user comments and suggestions.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/delivery" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">local_shipping</span>
+            </div>
+            <div class="action-text">
+                <h3>Delivery</h3>
+                <p>Manage and track book deliveries.</p>
+            </div>
+        </a>
+        
+        <a href="/admin/delivery-status" class="action-card">
+            <div class="action-icon">
+                <span class="material-symbols-outlined">package_2</span>
+            </div>
+            <div class="action-text">
+                <h3>Delivery Status</h3>
+                <p>Monitor delivery progress and updates.</p>
+            </div>
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

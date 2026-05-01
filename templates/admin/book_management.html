@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Management | Admin Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<style>
+/* --- Color Palette --- */
+:root {
+    --bg-main: #0F172A;      
+    --bg-surface: #1E293B;   
+    --text-primary: #F8FAFC; 
+    --text-secondary: #94A3B8; 
+    --accent: #3B82F6;       
+    --accent-hover: #2563EB;
+    --success: #10B981;
+    --danger: #EF4444;       
+    --border: rgba(255, 255, 255, 0.1); 
+    --input-bg: #0B1120;
+}
+
+/* --- Base Reset --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Inter', sans-serif; 
+}
+
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-primary); 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.sidebar-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 40px; 
+    font-size: 1.2rem; 
+    font-weight: 600; 
+}
+
+.sidebar-header .material-symbols-outlined { 
+    color: var(--accent); 
+    font-size: 28px; 
+}
+
+.nav-links { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    flex-grow: 1; 
+}
+
+.nav-link { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 12px 16px; 
+    color: var(--text-secondary); 
+    text-decoration: none; 
+    border-radius: 8px; 
+    transition: all 0.2s ease; 
+    font-weight: 500; 
+}
+
+.nav-link:hover, .nav-link.active { 
+    background-color: rgba(59, 130, 246, 0.1); 
+    color: var(--accent); 
+}
+
+.logout-btn { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 12px 16px; 
+    color: var(--danger); 
+    text-decoration: none; 
+    border-radius: 8px; 
+    transition: all 0.2s ease; 
+    margin-top: auto; 
+    font-weight: 500; 
+}
+
+.logout-btn:hover { 
+    background-color: rgba(239, 68, 68, 0.1); 
+}
+
+/* --- Main Content --- */
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-header h1 .material-symbols-outlined {
+    color: var(--accent);
+    font-size: 32px;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+}
+
+/* --- Search & Sort Bar --- */
+.controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.search-box .material-symbols-outlined {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 20px;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.sort-box select {
+    padding: 12px 16px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.sort-box select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* --- Table Container --- */
+.table-container {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.book-image {
+    width: 60px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.availability-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.availability-badge.yes {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.availability-badge.no {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+/* --- Action Buttons --- */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-edit {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--accent);
+}
+
+.btn-edit:hover {
+    background-color: var(--accent);
+    color: white;
+}
+
+.btn-delete {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.btn-delete:hover {
+    background-color: var(--danger);
+    color: white;
+}
+
+/* --- Modal --- */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h3 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-save {
+    background-color: var(--accent);
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-cancel {
+    background-color: rgba(148, 163, 184, 0.1);
+    color: var(--text-secondary);
+}
+
+.btn-cancel:hover {
+    background-color: rgba(148, 163, 184, 0.2);
+}
+
+/* --- Back Link --- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+    }
+    
+    .sidebar-header {
+        margin-bottom: 20px;
+    }
+    
+    .nav-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <span class="material-symbols-outlined">shield_person</span>
+        Admin Portal
+    </div>
+    
+    <div class="nav-links">
+        <a href="/admin/dashboard" class="nav-link">
+            <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="/admin/books" class="nav-link">
+            <span class="material-symbols-outlined">library_books</span> Books
+        </a>
+        <a href="/admin/orders" class="nav-link">
+            <span class="material-symbols-outlined">shopping_cart</span> Orders
+        </a>
+        <a href="/admin/users" class="nav-link">
+            <span class="material-symbols-outlined">group</span> Users
+        </a>
+    </div>
+    
+    <a href="/logout" class="logout-btn">
+        <span class="material-symbols-outlined">logout</span> Logout
+    </a>
+</nav>
+
+<main class="main-content">
+    <div class="page-header">
+        <h1>
+            <span class="material-symbols-outlined">settings</span>
+            Book Management
+        </h1>
+        <p>View, edit, and manage your book inventory</p>
+    </div>
+    
+    <div class="controls-bar">
+        <div class="search-box">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" id="searchInput" placeholder="Search by book name..." onkeyup="filterBooks()">
+        </div>
+        
+        <div class="sort-box">
+            <select id="sortSelect" onchange="sortBooks()">
+                <option value="">Sort by</option>
+                <option value="name-asc">Name: A → Z</option>
+                <option value="name-desc">Name: Z → A</option>
+                <option value="price-asc">Price: Low → High</option>
+                <option value="price-desc">Price: High → Low</option>
+                <option value="stock-asc">Stock: Low → High</option>
+                <option value="stock-desc">Stock: High → Low</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table id="booksTable">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr data-name="{{ book.book_name }}" data-price="{{ book.price }}" data-stock="{{ book.stock }}">
+                    <td>
+                        {% if book.image %}
+                        <img src="/static/uploads/books/{{ book.image }}" class="book-image" alt="{{ book.book_name }}">
+                        {% else %}
+                        <div style="width: 60px; height: 80px; background: var(--input-bg); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--text-secondary);">No Image</div>
+                        {% endif %}
+                    </td>
+                    <td>{{ book.book_name }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.genre }}</td>
+                    <td>₹{{ book.price }}</td>
+                    <td>{{ book.stock }}</td>
+                    <td>
+                        <span class="availability-badge {{ 'yes' if book.availability else 'no' }}">
+                            {{ "Yes" if book.availability else "No" }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-edit"
+                                data-id="{{ book._id }}"
+                                data-name="{{ book.book_name }}"
+                                data-author="{{ book.author }}"
+                                data-genre="{{ book.genre }}"
+                                data-price="{{ book.price }}"
+                                data-stock="{{ book.stock }}"
+                                data-availability="{{ book.availability }}"
+                                onclick="openEditModal(this)">
+                                <span class="material-symbols-outlined" style="font-size: 18px;">edit</span>
+                                Edit
+                            </button>
+                            
+                            <a href="/admin/books/delete/permanent/{{ book._id }}"
+                               onclick="return confirm('This will permanently delete this book. Continue?')">
+                                <button class="btn btn-delete">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+                                    Delete
+                                </button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <a href="/admin/dashboard" class="back-link">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back to Dashboard
+    </a>
+</main>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Book</h3>
+            <button class="close-btn" onclick="closeEditModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <form id="editForm" method="POST">
+            <div class="form-group">
+                <label for="edit_book_name">Book Name</label>
+                <input type="text" name="book_name" id="edit_book_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_author">Author</label>
+                <input type="text" name="author" id="edit_author" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_genre">Genre</label>
+                <input type="text" name="genre" id="edit_genre" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_price">Price (₹)</label>
+                <input type="number" step="0.01" name="price" id="edit_price" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_stock">Stock Quantity</label>
+                <input type="number" name="stock" id="edit_stock" required>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" name="availability" id="edit_availability">
+                <label for="edit_availability">Currently Available</label>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn btn-save">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Modal Functions
+const editModal = document.getElementById("editModal");
+const editForm = document.getElementById("editForm");
+
+function openEditModal(btn) {
+    editModal.classList.add('active');
+    
+    document.getElementById('edit_book_name').value = btn.dataset.name;
+    document.getElementById('edit_author').value = btn.dataset.author;
+    document.getElementById('edit_genre').value = btn.dataset.genre;
+    document.getElementById('edit_price').value = btn.dataset.price;
+    document.getElementById('edit_stock').value = btn.dataset.stock;
+    document.getElementById('edit_availability').checked = btn.dataset.availability === "True";
+    
+    editForm.action = "/admin/books/update/" + btn.dataset.id;
+}
+
+function closeEditModal() {
+    editModal.classList.remove('active');
+}
+
+// Close modal on outside click
+editModal.addEventListener('click', function(e) {
+    if (e.target === editModal) {
+        closeEditModal();
+    }
+});
+
+// Search Function
+function filterBooks() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const rows = document.querySelectorAll('#booksTable tbody tr[data-name]');
+    
+    rows.forEach(row => {
+        const name = row.dataset.name.toLowerCase();
+        row.style.display = name.includes(input) ? '' : 'none';
+    });
+}
+
+// Sort Function
+function sortBooks() {
+    const select = document.getElementById('sortSelect').value;
+    const tbody = document.querySelector('#booksTable tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr[data-name]'));
+    
+    rows.sort((a, b) => {
+        const nameA = a.dataset.name.toLowerCase();
+        const nameB = b.dataset.name.toLowerCase();
+        const priceA = parseFloat(a.dataset.price);
+        const priceB = parseFloat(b.dataset.price);
+        const stockA = parseInt(a.dataset.stock);
+        const stockB = parseInt(b.dataset.stock);
+        
+        switch(select) {
+            case 'name-asc': return nameA.localeCompare(nameB);
+            case 'name-desc': return nameB.localeCompare(nameA);
+            case 'price-asc': return priceA - priceB;
+            case 'price-desc': return priceB - priceA;
+            case 'stock-asc': return stockA - stockB;
+            case 'stock-desc': return stockB - stockA;
+            default: return 0;
+        }
+    });
+    
+    rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+
+</body>
+</html>

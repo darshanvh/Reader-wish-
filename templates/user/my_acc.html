@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Account | Reader Wish</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+    <style>
+      /* ================= MY ACCOUNT PAGE STYLES ================= */
+      /* Using theme variables from theme.css */
+      
+      *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:'Poppins',Arial,sans-serif;
+      }
+      
+      body {
+        min-height: 100vh;
+        background: var(--bg-color);
+        color: var(--text-dark);
+        padding-bottom: 40px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* ================= HEADER ================= */
+      header{
+        background: var(--surface);
+        color: var(--primary);
+        padding:16px 40px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.3s ease, border-color 0.3s ease;
+      }
+
+      header h1{
+        font-size:26px;
+        font-weight:700;
+        color: var(--primary);
+        margin: 0;
+      }
+
+      nav{
+        display:flex;
+        gap:20px;
+        align-items:center;
+      }
+
+      nav a,
+      nav span{
+        color: var(--text-dark);
+        text-decoration:none;
+        font-size:15px;
+        font-weight:500;
+        transition:0.3s;
+      }
+
+      nav a:hover{
+        color: var(--accent);
+      }
+
+      .btn{
+        background: var(--primary);
+        padding:8px 20px;
+        border-radius:20px;
+        color:#fff !important;
+        font-weight:600;
+        text-decoration:none;
+        border: none;
+        cursor: pointer;
+        transition:0.3s;
+      }
+
+      .btn:hover{
+        background: var(--primary-hover);
+        transform:translateY(-2px);
+      }
+
+      [data-theme="dark"] .btn {
+        background: #f8fafc;
+        color: #0f172a !important;
+      }
+
+      [data-theme="dark"] .btn:hover {
+        background: #e2e8f0;
+      }
+
+      .theme-toggle {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: 0.3s;
+      }
+
+      .theme-toggle:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+      }
+
+      [data-theme="dark"] .theme-toggle {
+        background: #f8fafc;
+      }
+
+      [data-theme="dark"] .theme-toggle:hover {
+        background: #e2e8f0;
+      }
+
+      /* =======================
+         ACCOUNT CARD
+         ======================= */
+      .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .account-card {
+          max-width: 600px;
+          margin: 0 auto;
+          border-radius: var(--radius-lg);
+          background: var(--surface);
+          box-shadow: var(--shadow-sm);
+          border: 1px solid var(--border);
+          padding: 45px;
+          transition: background 0.3s ease, border-color 0.3s ease;
+      }
+
+      /* PROFILE ICON */
+      .profile-icon {
+          font-size: 90px;
+          text-align: center;
+          margin-bottom: 15px;
+      }
+
+      /* TITLE */
+      .account-card h3 {
+          font-weight: 700;
+          color: var(--primary);
+          text-align:center;
+          font-size:28px;
+          margin-bottom:30px;
+          position:relative;
+      }
+
+      .account-card h3::after{
+        content:'';
+        position:absolute;
+        bottom:-10px;
+        left:50%;
+        transform:translateX(-50%);
+        width:60px;
+        height:4px;
+        background: var(--accent);
+        border-radius:2px;
+      }
+
+      /* TABLE STYLE */
+      .info-table {
+        width: 100%;
+        margin-bottom: 30px;
+      }
+
+      .info-table tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      .info-table th {
+          color: var(--text-light);
+          font-weight: 600;
+          font-size:14px;
+          margin-bottom: 8px;
+          text-align: left;
+      }
+
+      .info-table th i {
+        margin-right: 8px;
+        color: var(--accent);
+      }
+
+      .info-table td {
+          color: var(--text-dark);
+          font-size:15px;
+      }
+
+      .info-row{
+        background: var(--bg-color);
+        padding:15px 20px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        transition: background 0.3s ease, border-color 0.3s ease;
+      }
+
+      /* BUTTONS */
+      .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+
+      .btn-secondary {
+          background: var(--primary);
+          border:none;
+          padding:12px 25px;
+          border-radius:25px;
+          font-weight:600;
+          transition:all 0.3s ease;
+          color: #fff;
+          text-decoration: none;
+          display: inline-block;
+      }
+
+      .btn-secondary:hover {
+          background: var(--primary-hover);
+          transform:translateY(-3px);
+          box-shadow: var(--shadow-hover);
+      }
+
+      [data-theme="dark"] .btn-secondary {
+        background: #f8fafc;
+        color: #0f172a;
+      }
+
+      [data-theme="dark"] .btn-secondary:hover {
+        background: #e2e8f0;
+      }
+
+      .btn-danger {
+          background:#ff4d6d;
+          border:none;
+          padding:12px 25px;
+          border-radius:25px;
+          font-weight:600;
+          transition:all 0.3s ease;
+          color: #fff;
+          text-decoration: none;
+          display: inline-block;
+      }
+
+      .btn-danger:hover {
+          background: #dc2626;
+          transform:translateY(-3px);
+          box-shadow: var(--shadow-hover);
+      }
+
+      /* MOBILE */
+      @media (max-width: 768px) {
+          header {
+            padding: 12px 20px;
+            flex-direction: column;
+            gap: 15px;
+          }
+          
+          nav {
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .account-card {
+              margin: 0 10px;
+              padding:30px 25px;
+          }
+
+          .button-group {
+            flex-direction: column;
+          }
+
+          .btn-secondary,
+          .btn-danger {
+            width: 100%;
+            text-align: center;
+          }
+      }
+
+      @media (max-width: 480px) {
+        header h1 {
+          font-size: 20px;
+        }
+        
+        nav a, nav span {
+          font-size: 13px;
+        }
+        
+        .btn {
+          padding: 6px 14px;
+          font-size: 13px;
+        }
+
+        .account-card h3 {
+          font-size: 22px;
+        }
+
+        .profile-icon {
+          font-size: 70px;
+        }
+      }
+    </style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/my-orders">Orders</a>
+  
+    {% if session.user %}
+    <span>Hello, {{ user_name }}</span>
+    <a href="/logout" class="btn">Logout</a>
+    {% else %}
+    <a href="/login" class="btn">Login</a>
+    {% endif %}
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<div class="container">
+    <div class="account-card">
+        <div class="profile-icon">👤</div>
+
+        <h3>My Account</h3>
+
+        <table class="info-table">
+            <tr>
+                <th><i class="fas fa-user"></i> Name</th>
+                <td><div class="info-row">{{ user.name }}</div></td>
+            </tr>
+            <tr>
+                <th><i class="fas fa-phone"></i> Phone</th>
+                <td><div class="info-row">{{ user.phone }}</div></td>
+            </tr>
+            <tr>
+                <th><i class="fas fa-envelope"></i> Email</th>
+                <td><div class="info-row">{{ user.email }}</div></td>
+            </tr>
+            
+            <tr>
+                <th><i class="fas fa-id-card"></i> User ID</th>
+                <td><div class="info-row">{{ user._id }}</div></td>
+            </tr>
+        </table>
+
+        <div class="button-group">
+            <a href="/dashboard" class="btn-secondary"><i class="fas fa-home"></i> Back to Home</a>
+            <a href="/logout" class="btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+
+</body>
+</html>

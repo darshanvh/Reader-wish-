@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checkout - Cart</title>
+<style>
+/* Minimal styling copied from other templates */
+body {font-family: Arial, sans-serif; margin:0; padding-bottom:60px; background: #f5f5f5}
+.container {max-width:800px; margin:40px auto; background:white; padding:20px; border-radius:8px}
+.book-row {display:flex; gap:16px; align-items:center; padding:12px 0; border-bottom:1px solid #eee}
+.book-row img{width:80px; height:110px; object-fit:cover}
+.total {text-align:right; font-weight:bold; margin-top:12px}
+.form-row input, textarea {width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #ccc}
+.button {background:#ff7a00; color:white; padding:12px 20px; border-radius:20px; text-decoration:none; display:inline-block}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Checkout - Your Cart</h2>
+
+    <h3>Items</h3>
+    {% for b in books %}
+        <div class="book-row">
+            <img src="{{ url_for('static', filename='uploads/books/' + (b.image if b.image else '')) }}" alt="">
+            <div style="flex:1">
+                <div><b>{{ b.book_name }}</b></div>
+                <div>Price: ₹{{ b.price }}</div>
+                <div>Qty: {{ b.quantity }}</div>
+            </div>
+            <div>₹{{ b.price * b.quantity }}</div>
+        </div>
+    {% endfor %}
+
+    <div class="total">Total: ₹{{ total_price }}</div>
+
+    <h3>Shipping Details</h3>
+    <form method="post">
+        <div class="form-row">
+            <input name="name" placeholder="Name" value="{{ user.name if user else '' }}">
+            <input name="phone" placeholder="Phone" value="{{ user.phone if user else '' }}">
+            <input name="email" placeholder="Email" value="{{ user.email if user else '' }}">
+            <textarea name="address" placeholder="Address"></textarea>
+            <input name="pin_code" placeholder="Pin code">
+            <input name="state" placeholder="State">
+            <input name="district" placeholder="District">
+        </div>
+
+        <button class="button" type="submit">Proceed to Payment</button>
+    </form>
+</div>
+</body>
+</html>

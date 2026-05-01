@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wishlist | Reader Wish</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<style>
+/* ================= WISHLIST PAGE STYLES ================= */
+/* Using theme variables from theme.css */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',Arial,sans-serif;
+}
+
+body{
+  background: var(--bg-color);
+  color: var(--text-dark);
+  min-height:100vh;
+  padding-bottom:40px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ================= HEADER ================= */
+header{
+  background: var(--surface);
+  color: var(--primary);
+  padding:16px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+header h1{
+  font-size:26px;
+  font-weight:700;
+  color: var(--primary);
+  margin: 0;
+}
+
+nav{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+nav a,
+nav span{
+  color: var(--text-dark);
+  text-decoration:none;
+  font-size:15px;
+  font-weight: 500;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color: var(--accent);
+}
+
+.btn{
+  background: var(--primary);
+  padding:8px 20px;
+  border-radius:20px;
+  color:#fff !important;
+  font-weight:600;
+  text-decoration:none;
+  border: none;
+  cursor: pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background: var(--primary-hover);
+  transform:translateY(-2px);
+}
+
+[data-theme="dark"] .btn {
+  background: #f8fafc;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .btn:hover {
+  background: #e2e8f0;
+}
+
+.theme-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: #f8fafc;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: #e2e8f0;
+}
+
+/* ================= MAIN ================= */
+main{
+  background: var(--surface);
+  width:90%;
+  max-width:1200px;
+  margin:35px auto;
+  padding:40px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+main h2{
+  margin-bottom:30px;
+  font-size:28px;
+  color: var(--primary);
+  position:relative;
+  display:inline-block;
+  font-weight: 600;
+}
+
+main h2::after{
+  content:'';
+  position:absolute;
+  bottom:-8px;
+  left:0;
+  width:70px;
+  height:4px;
+  background: var(--accent);
+  border-radius:2px;
+}
+
+/* ================= GRID ================= */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:28px;
+}
+
+/* ================= CARD ================= */
+.card{
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  overflow:hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition:.35s;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-content{
+  padding:18px;
+}
+
+.meta{
+  font-size:14px;
+  color: var(--text-light);
+  margin-bottom:8px;
+}
+
+.price{
+  font-size:20px;
+  font-weight:700;
+  color: var(--accent);
+  margin-bottom: 15px;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.card-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
+}
+
+.small-btn{
+  flex:1;
+  text-align:center;
+  padding:10px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  text-decoration:none;
+  transition:all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+/* Remove */
+.small-btn.remove{
+  background:#ff4d6d;
+  color:#fff;
+}
+
+.small-btn.remove:hover{
+  background: #dc2626;
+  transform:translateY(-2px);
+}
+
+/* Cart */
+.small-btn.cart{
+  background: var(--primary);
+  color:#fff;
+}
+
+.small-btn.cart:hover{
+  background: var(--primary-hover);
+  transform:translateY(-2px);
+}
+
+[data-theme="dark"] .small-btn.cart {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .small-btn.cart:hover {
+  background: #e2e8f0;
+}
+
+/* Buy */
+.small-btn.buy{
+  background: var(--accent);
+  color:#fff;
+}
+
+.small-btn.buy:hover{
+  background: var(--accent-hover);
+  transform:translateY(-2px);
+}
+
+/* Wishlist status */
+.small-btn.wishlist-red{
+  background: #ef4444;
+  color:#fff;
+  font-weight:600;
+  cursor: default;
+  pointer-events:none;
+}
+
+.empty-message {
+  text-align:center;
+  font-size:20px;
+  color: var(--text-light);
+  margin-top:30px;
+  padding: 40px;
+}
+
+footer{
+  text-align:center;
+  padding:25px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  main {
+    padding: 25px;
+    width: 95%;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 20px;
+  }
+  
+  nav a, nav span {
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  main h2 {
+    font-size: 22px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+  }
+  
+  .small-btn {
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/my-orders">Orders</a>
+    <a href="/my-acc">Profile</a>
+    {% if session.user %}
+    <span>Hello, {{ user_name }}</span>
+    <a href="/logout" class="btn">Logout</a>
+    {% else %}
+    <a href="/login" class="btn">Login</a>
+    {% endif %}
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main>
+  <h2>❤️ My Wishlist</h2>
+
+  {% if books %}
+  <div class="grid">
+    {% for book in books %}
+    <div class="card">
+      <img src="{{ url_for('static', filename='uploads/books/' + book.image) }}">
+
+      <div class="card-content">
+        <div class="meta">Author: {{ book.author }}</div>
+        <div class="price">₹{{ book.price }}</div>
+
+        <div class="card-actions">
+          <a href="/cart/add/{{ book._id }}" class="small-btn cart">
+            🛒 Add to Cart
+          </a>
+
+          <a href="/order/{{ book._id }}" class="small-btn buy">
+            💳 Buy Now
+          </a>
+
+          <a href="/wishlist/remove/{{ book._id }}" class="small-btn remove">
+             🗑 Remove
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="empty-message">Your wishlist is empty 😔</p>
+  {% endif %}
+</main>
+
+<footer>© 2026 Reader Wish | Made with ❤️ | All Rights Reserved</footer>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+
+</body>
+</html>

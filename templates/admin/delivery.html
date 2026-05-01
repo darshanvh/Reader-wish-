@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Management | Admin Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<style>
+/* --- Color Palette --- */
+:root {
+    --bg-main: #0F172A;      
+    --bg-surface: #1E293B;   
+    --text-primary: #F8FAFC; 
+    --text-secondary: #94A3B8; 
+    --accent: #3B82F6;       
+    --accent-hover: #2563EB;
+    --success: #10B981;
+    --danger: #EF4444;       
+    --border: rgba(255, 255, 255, 0.1); 
+    --input-bg: #0B1120;
+}
+
+/* --- Base Reset --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Inter', sans-serif; 
+}
+
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-primary); 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.sidebar-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 40px; 
+    font-size: 1.2rem; 
+    font-weight: 600; 
+}
+
+.sidebar-header .material-symbols-outlined { 
+    color: var(--accent); 
+    font-size: 28px; 
+}
+
+.nav-links { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    flex-grow: 1; 
+}
+
+.nav-link { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 12px 16px; 
+    color: var(--text-secondary); 
+    text-decoration: none; 
+    border-radius: 8px; 
+    transition: all 0.2s ease; 
+    font-weight: 500; 
+}
+
+.nav-link:hover, .nav-link.active { 
+    background-color: rgba(59, 130, 246, 0.1); 
+    color: var(--accent); 
+}
+
+.logout-btn { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 12px 16px; 
+    color: var(--danger); 
+    text-decoration: none; 
+    border-radius: 8px; 
+    transition: all 0.2s ease; 
+    margin-top: auto; 
+    font-weight: 500; 
+}
+
+.logout-btn:hover { 
+    background-color: rgba(239, 68, 68, 0.1); 
+}
+
+/* --- Main Content --- */
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-header h1 .material-symbols-outlined {
+    color: var(--accent);
+    font-size: 32px;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+}
+
+/* --- Orders Grid --- */
+.orders-grid {
+    display: grid;
+    gap: 24px;
+}
+
+/* --- Order Card (Receipt Style) --- */
+.order-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+}
+
+/* --- Order Header --- */
+.order-header {
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-id {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-date {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* --- Order Body --- */
+.order-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+}
+
+/* --- Book Section --- */
+.book-section {
+    display: flex;
+    gap: 16px;
+    align-items: start;
+}
+
+.book-image {
+    width: 100px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.book-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.book-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.book-detail .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--accent);
+}
+
+.book-detail strong {
+    color: var(--text-primary);
+}
+
+/* --- Customer Section --- */
+.customer-section {
+    background-color: var(--input-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title .material-symbols-outlined {
+    color: var(--accent);
+    font-size: 22px;
+}
+
+.customer-detail {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+.customer-detail .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--accent);
+    margin-top: 2px;
+}
+
+.customer-detail .label {
+    color: var(--text-secondary);
+    min-width: 80px;
+}
+
+.customer-detail .value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* --- Order Footer --- */
+.order-footer {
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+    background-color: rgba(59, 130, 246, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.total-price .material-symbols-outlined {
+    font-size: 24px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.status-badge .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.btn-pickup {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background-color: var(--accent);
+    color: white;
+}
+
+.btn-pickup:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.btn-pickup .material-symbols-outlined {
+    font-size: 20px;
+}
+
+/* --- Empty State --- */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.empty-state .material-symbols-outlined {
+    font-size: 80px;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+/* --- Back Link --- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+    }
+    
+    .sidebar-header {
+        margin-bottom: 20px;
+    }
+    
+    .nav-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .order-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .book-section {
+        flex-direction: column;
+    }
+    
+    .order-footer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <span class="material-symbols-outlined">shield_person</span>
+        Admin Portal
+    </div>
+    
+    <div class="nav-links">
+        <a href="/admin/dashboard" class="nav-link">
+            <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="/admin/books" class="nav-link">
+            <span class="material-symbols-outlined">library_books</span> Books
+        </a>
+        <a href="/admin/orders" class="nav-link">
+            <span class="material-symbols-outlined">shopping_cart</span> Orders
+        </a>
+        <a href="/admin/users" class="nav-link">
+            <span class="material-symbols-outlined">group</span> Users
+        </a>
+    </div>
+    
+    <a href="/logout" class="logout-btn">
+        <span class="material-symbols-outlined">logout</span> Logout
+    </a>
+</nav>
+
+<main class="main-content">
+    <div class="page-header">
+        <h1>
+            <span class="material-symbols-outlined">local_shipping</span>
+            Delivery Management
+        </h1>
+        <p>View and manage all order deliveries</p>
+    </div>
+    
+    <!-- Orders Grid -->
+    {% if orders %}
+    <div class="orders-grid">
+        {% for order in orders %}
+        <div class="order-card">
+            <!-- Order Header -->
+            <div class="order-header">
+                <div class="order-id">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    Order #{{ order._id }}
+                </div>
+                <div class="order-date">
+                    <span class="material-symbols-outlined">schedule</span>
+                    {{ order.order_date.strftime('%d-%m-%Y %H:%M') }}
+                </div>
+            </div>
+            
+            <!-- Order Body -->
+            <div class="order-body">
+                <!-- Book Section -->
+                <div class="book-section">
+                    {% if order.book_image %}
+                    <img src="/static/uploads/books/{{ order.book_image }}" alt="{{ order.book_name }}" class="book-image">
+                    {% else %}
+                    <div style="width: 100px; height: 140px; background: var(--input-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);">
+                        <span class="material-symbols-outlined" style="font-size: 48px; color: var(--text-secondary);">book</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="book-info">
+                        <h3>{{ order.book_name }}</h3>
+                        <div class="book-detail">
+                            <span class="material-symbols-outlined">payments</span>
+                            <span>Price: <strong>₹{{ order.book_price }}</strong></span>
+                        </div>
+                        <div class="book-detail">
+                            <span class="material-symbols-outlined">shopping_bag</span>
+                            <span>Quantity: <strong>{{ order.quantity }}</strong></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Section -->
+                <div class="customer-section">
+                    <div class="section-title">
+                        <span class="material-symbols-outlined">person</span>
+                        Customer Details
+                    </div>
+                    
+                    {% if order.user_info %}
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">badge</span>
+                        <span class="label">Name:</span>
+                        <span class="value">{{ order.user_info.name }}</span>
+                    </div>
+                    
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">phone</span>
+                        <span class="label">Mobile:</span>
+                        <span class="value">{{ order.user_info.phone }}</span>
+                    </div>
+                    
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">email</span>
+                        <span class="label">Email:</span>
+                        <span class="value">{{ order.user_info.email }}</span>
+                    </div>
+                    
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">home</span>
+                        <span class="label">Address:</span>
+                        <span class="value">{{ order.user_info.address }}</span>
+                    </div>
+                    
+                    {% if order.user_info.get('pin_code') %}
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">pin_drop</span>
+                        <span class="label">Pin Code:</span>
+                        <span class="value">{{ order.user_info.pin_code }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if order.user_info.get('state') %}
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">map</span>
+                        <span class="label">State:</span>
+                        <span class="value">{{ order.user_info.state }}</span>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="customer-detail">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="value" style="color: var(--text-secondary);">Customer information not available</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Order Footer -->
+            <div class="order-footer">
+                <div class="total-price">
+                    <span class="material-symbols-outlined">payments</span>
+                    Total: ₹{{ order.total_price }}
+                </div>
+                <a href="/admin/delivery/pickup/{{ order._id }}" 
+                   class="btn-pickup"
+                   onclick="return confirm('Pick up this order for delivery?')">
+                    <span class="material-symbols-outlined">local_shipping</span>
+                    Pick Up
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <span class="material-symbols-outlined">local_shipping</span>
+        <h3>No Orders Yet</h3>
+        <p>Orders will appear here once customers make purchases.</p>
+    </div>
+    {% endif %}
+    
+    <a href="/admin/dashboard" class="back-link">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back to Dashboard
+    </a>
+</main>
+
+</body>
+</html>

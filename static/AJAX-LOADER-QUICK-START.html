@@ -1,0 +1,57 @@
+<!-- QUICK START: Global AJAX Loader for Reader Wish Project -->
+
+<!--
+To use the global AJAX loader in any page:
+
+1. Add this to the <head> section:
+   <script src="/static/ajax-loader.js"></script>
+
+2. Use these functions in your JavaScript:
+   - showAjaxLoader()           // Show with default "Loading..." message
+   - showAjaxLoader('message')  // Show with custom message
+   - hideAjaxLoader()           // Hide the loader
+   
+3. Wrap all AJAX calls:
+-->
+
+<!-- EXAMPLE IMPLEMENTATION -->
+
+<!--
+<script>
+function myAjaxFunction() {
+    // Show the loading spinner
+    showAjaxLoader('Processing...');
+    
+    // Make your AJAX call
+    fetch('/your-endpoint')
+        .then(response => response.json())
+        .then(data => {
+            // Do something with data
+            hideAjaxLoader();
+        })
+        .catch(error => {
+            hideAjaxLoader();
+        });
+}
+</script>
+-->
+
+<!-- PAGES THAT NEED THIS -->
+<!-- 
+✅ templates/user/dashboard.html - DONE (filter functionality)
+○ templates/user/cart.html
+○ templates/user/wishlist.html
+○ templates/user/my_orders.html
+○ templates/user/checkout_details.html
+○ templates/admin/book_management.html
+○ templates/admin/orders.html
+○ Any page with fetch() or AJAX calls
+-->
+
+<!-- CSS CLASSES USED INTERNALLY (do not modify) -->
+<!--
+.global-loader-container - Main loader container
+.global-loader-box - Loader box wrapper
+.global-loader - Spinner animation
+.global-loader-text - Loading text
+-->

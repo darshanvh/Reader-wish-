@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ book.book_name }} | Reader Wish</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+<style>
+:root {
+  --bg-color: #f8fafc;
+  --surface: #ffffff;
+  --primary: #0f172a;
+  --primary-hover: #1e293b;
+  --accent: #f59e0b;
+  --accent-hover: #d97706;
+  --text-dark: #334155;
+  --text-light: #94a3b8;
+  --border: #e2e8f0;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg-color: #0f172a;
+  --surface: #1e293b;
+  --primary: #f8fafc;
+  --primary-hover: #e2e8f0;
+  --accent: #fbbf24;
+  --accent-hover: #f59e0b;
+  --text-dark: #e2e8f0;
+  --text-light: #94a3b8;
+  --border: #334155;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-dark);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header {
+  background: var(--surface);
+  color: var(--primary);
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+nav a,
+nav span {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+.btn {
+  background: var(--primary);
+  padding: 8px 20px;
+  border-radius: 20px;
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .btn {
+  background: #f8fafc;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .btn:hover {
+  background: #e2e8f0;
+}
+
+.theme-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: #f8fafc;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: #e2e8f0;
+}
+
+.back-btn {
+  background: var(--primary);
+  padding: 8px 20px;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.book-detail {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.book-image {
+  width: 100%;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-hover);
+}
+
+.book-info h2 {
+  font-size: 32px;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.book-info .author {
+  font-size: 18px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.book-info .genre {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.book-info .price {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 30px;
+}
+
+.feedback-section {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.feedback-section h3 {
+  font-size: 24px;
+  color: var(--primary);
+  margin-bottom: 25px;
+}
+
+.feedback-form {
+  background: var(--bg-color);
+  padding: 25px;
+  border-radius: var(--radius-md);
+  margin-bottom: 30px;
+}
+
+.rating-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.rating-input label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+}
+
+.star {
+  font-size: 30px;
+  cursor: pointer;
+  color: #cbd5e1;
+  transition: 0.2s;
+}
+
+.star.active,
+.star:hover {
+  color: #fbbf24;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dark);
+  font-family: 'Poppins', sans-serif;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.submit-btn {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.edit-btn {
+  background: #3b82f6;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+.cancel-btn {
+  background: #6b7280;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cancel-btn:hover {
+  background: #4b5563;
+  transform: translateY(-2px);
+}
+
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feedback-item {
+  background: var(--bg-color);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.feedback-user {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.feedback-rating {
+  color: #fbbf24;
+  font-size: 18px;
+}
+
+.feedback-date {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.feedback-comment {
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.no-feedback {
+  text-align: center;
+  color: var(--text-light);
+  padding: 40px;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .book-detail {
+    grid-template-columns: 1fr;
+    padding: 25px;
+  }
+  
+  .container {
+    padding: 0 10px;
+  }
+  
+  .feedback-section {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 20px;
+  }
+  
+  nav a, nav span {
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  .book-info h2 {
+    font-size: 24px;
+  }
+  
+  .book-info .price {
+    font-size: 28px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/my-orders">Orders</a>
+    <a href="/my-acc">Profile</a>
+    {% if session.user %}
+    <span>Hello, {{ user_name }}</span>
+    <a href="/logout" class="btn">Logout</a>
+    {% else %}
+    <a href="/login" class="btn">Login</a>
+    {% endif %}
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="book-detail">
+    <div>
+      <img src="/static/uploads/books/{{ book.image }}" alt="{{ book.book_name }}" class="book-image">
+    </div>
+    <div class="book-info">
+      <h2>{{ book.book_name }}</h2>
+      <p class="author">by {{ book.author or 'Unknown' }}</p>
+      <span class="genre">{{ book.genre }}</span>
+      <p class="price">₹{{ book.price }}</p>
+      <p style="color: var(--text-light); margin-bottom: 20px;">
+        Stock: {{ book.stock }} | Availability: {{ 'In Stock' if book.availability else 'Out of Stock' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="feedback-section">
+    <h3>📝 Customer Feedback</h3>
+    
+    {% if user_feedback %}
+    <div class="feedback-form" style="background: #d1fae5; border: 2px solid #10b981;">
+      <div style="display: flex; justify-content: space-between; align-items: start;">
+        <div style="flex: 1;">
+          <p style="color: #065f46; font-weight: 600; margin-bottom: 10px;">✓ Your Review</p>
+          <p style="color: #047857; margin-top: 10px;" id="userRating">Rating: {{ '★' * user_feedback.rating }}{{ '☆' * (5 - user_feedback.rating) }}</p>
+          <p style="color: #047857; margin-top: 5px;" id="userComment">Comment: {{ user_feedback.comment }}</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="editFeedback()" class="edit-btn">✏️ Edit</button>
+          <button onclick="deleteFeedback()" class="delete-btn">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Hidden Edit Form -->
+    <div class="feedback-form" id="editForm" style="display: none;">
+      <h4 style="margin-bottom: 15px; color: var(--primary);">Edit Your Review</h4>
+      <form id="editFeedbackForm">
+        <div class="rating-input">
+          <label>Rating:</label>
+          <div class="star-rating" id="editStarRating">
+            <span class="star edit-star" data-rating="1">★</span>
+            <span class="star edit-star" data-rating="2">★</span>
+            <span class="star edit-star" data-rating="3">★</span>
+            <span class="star edit-star" data-rating="4">★</span>
+            <span class="star edit-star" data-rating="5">★</span>
+          </div>
+          <input type="hidden" id="editRatingValue" name="rating" value="{{ user_feedback.rating }}">
+        </div>
+        
+        <div class="form-group">
+          <label>Your Feedback:</label>
+          <textarea name="comment" id="editComment" placeholder="Share your thoughts about this book..." required>{{ user_feedback.comment }}</textarea>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" class="submit-btn">Update Feedback</button>
+          <button type="button" onclick="cancelEdit()" class="cancel-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+    {% else %}
+    <div class="feedback-form">
+      <form id="feedbackForm">
+        <div class="rating-input">
+          <label>Rating:</label>
+          <div class="star-rating" id="starRating">
+            <span class="star" data-rating="1">★</span>
+            <span class="star" data-rating="2">★</span>
+            <span class="star" data-rating="3">★</span>
+            <span class="star" data-rating="4">★</span>
+            <span class="star" data-rating="5">★</span>
+          </div>
+          <input type="hidden" id="ratingValue" name="rating" value="0">
+        </div>
+        
+        <div class="form-group">
+          <label>Your Feedback:</label>
+          <textarea name="comment" id="comment" placeholder="Share your thoughts about this book..." required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">Submit Feedback</button>
+      </form>
+    </div>
+    {% endif %}
+    
+    <h4 style="margin-top: 30px; margin-bottom: 20px; color: var(--primary);">All Reviews ({{ feedbacks|length }})</h4>
+    
+    <div class="feedback-list" id="feedbackList">
+      {% if feedbacks %}
+        {% for feedback in feedbacks %}
+        <div class="feedback-item">
+          <div class="feedback-header">
+            <span class="feedback-user">{{ feedback.user_name }}</span>
+            <span class="feedback-rating">{{ '★' * feedback.rating }}{{ '☆' * (5 - feedback.rating) }}</span>
+          </div>
+          <p class="feedback-date">{{ feedback.created_at.strftime('%d-%m-%Y %H:%M') }}</p>
+          <p class="feedback-comment">{{ feedback.comment }}</p>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-feedback">No feedback yet. Be the first to review this book!</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+// Star rating functionality for new feedback
+const stars = document.querySelectorAll('.star:not(.edit-star)');
+const ratingValue = document.getElementById('ratingValue');
+
+if (stars.length > 0 && ratingValue) {
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      const rating = this.getAttribute('data-rating');
+      ratingValue.value = rating;
+      
+      stars.forEach(s => {
+        if (s.getAttribute('data-rating') <= rating) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    });
+    
+    star.addEventListener('mouseover', function() {
+      const rating = this.getAttribute('data-rating');
+      stars.forEach(s => {
+        if (s.getAttribute('data-rating') <= rating) {
+          s.style.color = '#fbbf24';
+        } else {
+          s.style.color = '#cbd5e1';
+        }
+      });
+    });
+  });
+
+  const starRating = document.getElementById('starRating');
+  if (starRating) {
+    starRating.addEventListener('mouseout', function() {
+      const currentRating = ratingValue.value;
+      stars.forEach(s => {
+        if (s.getAttribute('data-rating') <= currentRating) {
+          s.style.color = '#fbbf24';
+        } else {
+          s.style.color = '#cbd5e1';
+        }
+      });
+    });
+  }
+}
+
+// Star rating functionality for edit feedback
+const editStars = document.querySelectorAll('.edit-star');
+const editRatingValue = document.getElementById('editRatingValue');
+
+if (editStars.length > 0 && editRatingValue) {
+  // Set initial stars based on existing rating
+  const initialRating = editRatingValue.value;
+  editStars.forEach(s => {
+    if (s.getAttribute('data-rating') <= initialRating) {
+      s.classList.add('active');
+    }
+  });
+
+  editStars.forEach(star => {
+    star.addEventListener('click', function() {
+      const rating = this.getAttribute('data-rating');
+      editRatingValue.value = rating;
+      
+      editStars.forEach(s => {
+        if (s.getAttribute('data-rating') <= rating) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    });
+    
+    star.addEventListener('mouseover', function() {
+      const rating = this.getAttribute('data-rating');
+      editStars.forEach(s => {
+        if (s.getAttribute('data-rating') <= rating) {
+          s.style.color = '#fbbf24';
+        } else {
+          s.style.color = '#cbd5e1';
+        }
+      });
+    });
+  });
+
+  const editStarRating = document.getElementById('editStarRating');
+  if (editStarRating) {
+    editStarRating.addEventListener('mouseout', function() {
+      const currentRating = editRatingValue.value;
+      editStars.forEach(s => {
+        if (s.getAttribute('data-rating') <= currentRating) {
+          s.style.color = '#fbbf24';
+        } else {
+          s.style.color = '#cbd5e1';
+        }
+      });
+    });
+  }
+}
+
+// Submit new feedback
+const feedbackForm = document.getElementById('feedbackForm');
+if (feedbackForm) {
+  feedbackForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const rating = ratingValue.value;
+    const comment = document.getElementById('comment').value;
+    
+    if (rating == 0) {
+      alert('Please select a rating');
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append('rating', rating);
+    formData.append('comment', comment);
+    
+    fetch('/book/{{ book._id }}/feedback', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Feedback submitted successfully!');
+        location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred');
+    });
+  });
+}
+
+// Edit feedback
+function editFeedback() {
+  document.getElementById('editForm').style.display = 'block';
+  window.scrollTo({ top: document.getElementById('editForm').offsetTop - 100, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  document.getElementById('editForm').style.display = 'none';
+}
+
+// Submit edited feedback
+const editFeedbackForm = document.getElementById('editFeedbackForm');
+if (editFeedbackForm) {
+  editFeedbackForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const rating = editRatingValue.value;
+    const comment = document.getElementById('editComment').value;
+    
+    if (rating == 0) {
+      alert('Please select a rating');
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append('rating', rating);
+    formData.append('comment', comment);
+    
+    fetch('/book/{{ book._id }}/feedback/edit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Feedback updated successfully!');
+        location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred');
+    });
+  });
+}
+
+// Delete feedback
+function deleteFeedback() {
+  if (!confirm('Are you sure you want to delete your feedback? This action cannot be undone.')) {
+    return;
+  }
+  
+  fetch('/book/{{ book._id }}/feedback/delete', {
+    method: 'POST'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Feedback deleted successfully!');
+      location.reload();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred');
+  });
+}
+</script>
+
+<script src="{{ url_for('static', filename='ajax-loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Order | Reader Wish</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<style>
+/* ================= BASE ================= */
+body{
+  font-family:'Poppins',sans-serif;
+  background: var(--bg-color);
+  color: var(--text-dark);
+  margin:0;
+  min-height: 100vh;
+}
+
+/* ================= HEADER (FROM CART) ================= */
+header {
+  background: var(--surface);
+  color: var(--primary);
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+nav a, nav span {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+nav a:hover { color: var(--accent); }
+
+.btn {
+  background: var(--primary);
+  padding: 8px 20px;
+  border-radius: 20px;
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.theme-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* ================= MAIN CONTAINER (FROM CART) ================= */
+.main-container{
+  background: var(--surface);
+  width:90%;
+  max-width:900px;
+  margin:40px auto;
+  padding:40px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.main-container h2{
+  font-size:28px;
+  margin-bottom:30px;
+  color: var(--primary);
+  font-weight: 600;
+  text-align:center;
+}
+
+/* ================= PRODUCT CARD ================= */
+.product-card{
+  display:flex;
+  gap:25px;
+  background: var(--bg-color);
+  padding:25px;
+  border-radius: var(--radius-md);
+  margin-bottom:30px;
+  align-items:center;
+  border: 1px solid var(--border);
+}
+
+.product-card img{
+  width:180px;
+  height:130px;
+  object-fit:cover;
+  border-radius: var(--radius-md);
+}
+
+.product-info h3{
+  margin:0 0 8px 0;
+  color: var(--primary);
+}
+
+.price{
+  font-size:20px;
+  font-weight:600;
+  color: var(--accent);
+}
+
+/* ================= FORM ================= */
+.form-group{
+  margin-bottom:20px;
+}
+
+.form-group label{
+  display:block;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.form-group input,
+.form-group textarea{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background: var(--bg-color);
+  color: var(--text-dark);
+}
+
+.form-group textarea{
+  resize:vertical;
+  min-height:100px;
+}
+
+/* ================= QUANTITY ================= */
+.qty-box{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.qty-box input{
+  width:100px;
+  padding:10px;
+  border-radius:10px;
+  border:2px solid var(--accent);
+  text-align:center;
+  font-weight:600;
+}
+
+/* ================= TOTAL BOX ================= */
+.total-box{
+  background: var(--bg-color);
+  padding:20px;
+  border-radius: var(--radius-md);
+  margin:25px 0;
+  border:1px solid var(--border);
+}
+
+.total-box h3{
+  margin:0 0 10px 0;
+}
+
+.amount{
+  font-size:28px;
+  font-weight:700;
+  color: var(--accent);
+}
+
+/* ================= BUTTONS ================= */
+.btn-group{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-top:30px;
+}
+
+.btn-primary{
+  background: var(--accent);
+  color:#fff;
+  padding:12px 30px;
+  border-radius:25px;
+  text-decoration:none;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+
+.btn-primary:hover{
+  transform: translateY(-2px);
+}
+
+.btn-secondary{
+  background:#94a3b8;
+  color:#fff;
+  padding:12px 30px;
+  border-radius:25px;
+  text-decoration:none;
+}
+
+/* ================= RECEIPT ================= */
+.receipt{
+  background: var(--bg-color);
+  padding:25px;
+  border-radius: var(--radius-md);
+  border:1px solid var(--border);
+  margin-bottom:20px;
+}
+
+.receipt h4{
+  margin-bottom:10px;
+  color: var(--primary);
+}
+
+.print-btn{
+  background: var(--accent);
+  color:#fff;
+  padding:10px 25px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <h1>📚 Reader Wish</h1>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/logout" class="btn">Logout</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+  </nav>
+</header>
+
+<!-- ===== MAIN ===== -->
+<div class="main-container">
+
+{% if step == 1 %}
+<h2>📦 Select Quantity</h2>
+
+<div class="product-card">
+  <img src="{{ url_for('static', filename='uploads/books/' + product.image) }}">
+  <div class="product-info">
+    <h3>{{ product.book_name }}</h3>
+    <p>{{ product.author }}</p>
+    <div class="price">₹{{ product.price }} per unit</div>
+  </div>
+</div>
+
+<form method="POST">
+  <div class="qty-box">
+    <label>Quantity:</label>
+    <input type="number" name="quantity" id="qty" value="1" min="1"
+           onchange="updateTotal()" data-price="{{ product.price }}">
+  </div>
+
+  <div class="total-box">
+    <h3>Total Amount</h3>
+    <div class="amount">₹<span id="total">{{ product.price }}</span></div>
+  </div>
+
+  <div class="btn-group">
+    <a href="/cart" class="btn-secondary">Cancel</a>
+    <button class="btn-primary">Next →</button>
+  </div>
+</form>
+
+{% elif step == 2 %}
+<h2>📝 Delivery Details</h2>
+
+<form method="POST">
+  <div class="form-group">
+    <label>Full Name</label>
+    <input type="text" name="name" required>
+  </div>
+
+  <div class="form-group">
+    <label>Mobile Number</label>
+    <input type="tel" name="mobile" required>
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" name="email" required>
+  </div>
+
+  <div class="form-group">
+    <label>Address</label>
+    <textarea name="address" required></textarea>
+  </div>
+
+  <div class="total-box">
+    <h3>Order Summary</h3>
+    <p>Quantity: {{ quantity }}</p>
+    <div class="amount">₹{{ total }}</div>
+  </div>
+
+  <div class="btn-group">
+    <a href="#" class="btn-secondary">Back</a>
+    <button class="btn-primary">Place Order</button>
+  </div>
+</form>
+
+{% elif step == 3 %}
+<h2>✅ Order Confirmed</h2>
+
+<div class="receipt">
+  <h4>Customer Details</h4>
+  <p>Name: {{ name }}</p>
+  <p>Mobile: {{ mobile }}</p>
+  <p>Email: {{ email }}</p>
+  <p>Address: {{ address }}</p>
+</div>
+
+<div class="receipt">
+  <h4>Product</h4>
+  <p>{{ product.book_name }}</p>
+  <p>₹{{ product.price }} × {{ quantity }}</p>
+</div>
+
+<div class="total-box">
+  <h3>Total Paid</h3>
+  <div class="amount">₹{{ total }}</div>
+</div>
+
+<div class="btn-group">
+  <button onclick="window.print()" class="print-btn">
+    <i class="fa fa-print"></i> Print
+  </button>
+  <a href="/dashboard" class="btn-primary">Continue Shopping</a>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+function updateTotal() {
+  const qty = document.getElementById('qty').value;
+  const price = document.getElementById('qty').dataset.price;
+  document.getElementById('total').innerText = qty * price;
+}
+</script>
+
+</body>
+</html>

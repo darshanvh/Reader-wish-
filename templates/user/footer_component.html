@@ -1,0 +1,107 @@
+<footer>
+  <div class="footer-content">
+    <!-- Contact Information Section -->
+    <div class="footer-section">
+      <h3>📞 Contact Us</h3>
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>123 Book Street, Reading City, RC 12345</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone"></i>
+          <span>+91 98765 43210</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>support@readerwish.com</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-clock"></i>
+          <span>Mon - Sat: 9:00 AM - 8:00 PM</span>
+        </div>
+      </div>
+      
+      <div class="social-links">
+        <a href="https://facebook.com" target="_blank" class="social-link" title="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://twitter.com" target="_blank" class="social-link" title="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="social-link" title="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://youtube.com" target="_blank" class="social-link" title="YouTube">
+          <i class="fab fa-youtube"></i>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Feedback Form Section -->
+    <div class="footer-section">
+      <h3>💬 Send Us Feedback</h3>
+      <div class="feedback-form-footer">
+        <form id="generalFeedbackForm">
+          <div class="form-group-footer">
+            <label>Your Name</label>
+            <input type="text" name="name" class="feedback-name-input" placeholder="Enter your name" required>
+          </div>
+          
+          <div class="form-group-footer">
+            <label>Your Email</label>
+            <input type="email" name="email" class="feedback-email-input" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group-footer">
+            <label>Your Message</label>
+            <textarea name="message" class="feedback-message-input" placeholder="Share your thoughts, suggestions, or concerns..." required></textarea>
+          </div>
+          
+          <button type="submit" class="submit-feedback-btn">Send Feedback</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    © 2026 Reader Wish | Made with ❤️ | All Rights Reserved
+  </div>
+</footer>
+
+<script>
+// General Feedback Form Submission
+document.getElementById('generalFeedbackForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const name = this.querySelector('.feedback-name-input').value;
+  const email = this.querySelector('.feedback-email-input').value;
+  const message = this.querySelector('.feedback-message-input').value;
+  
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('message', message);
+  
+  fetch('/submit-general-feedback', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert(data.message);
+      document.getElementById('generalFeedbackForm').reset();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while submitting feedback');
+  });
+});
+</script>
