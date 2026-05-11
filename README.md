@@ -1,4 +1,4 @@
-# Reader Wish
+# Reader Wish..
 
 
 Reader Wish is a web-based platform for managing and tracking books, orders, and user interactions. It provides both admin and user dashboards, book management, order processing, and wishlist features. The project is built using Flask and MongoDB, with AJAX-powered UI for a seamless user experience.
